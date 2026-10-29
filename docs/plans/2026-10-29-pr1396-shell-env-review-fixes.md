@@ -78,6 +78,10 @@ test result: ok. 1 passed; 0 failed; 0 ignored
 
 合入后重新执行了上文全部五条定向验证命令，结果仍为 `15 + 3 + 3 + 1 + 1` 项通过，0 失败；真实 CLI 烟测显式执行通过。
 
+## 独立复审
+
+独立 Reviewer 对最终源码和合并后的发送入口只读审查：**无 P0 / P1 / P2，结论通过，无阻断**。逐项确认 Windows 条件编译、OMP 裸名字段范围、逐项正值 TTL、PI 模板规则、引擎隔离、Codex helper 复用，以及注入先于上游 served-model bridge 的顺序。Reviewer 没有自行执行编译或测试；上述实际运行结果由主代理核验。
+
 ## 验证边界
 
 - 没有在 Windows 主机实际编译或运行；Windows 修复依据为测试的条件编译边界，最终以 Windows CI 为准。
