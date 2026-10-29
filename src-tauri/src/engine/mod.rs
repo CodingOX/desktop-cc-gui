@@ -43,6 +43,7 @@ mod qoder_session;
 mod reader;
 mod registry;
 pub mod resolve;
+mod shell_env;
 pub mod wsl_transport;
 
 pub(crate) use resolve::command_for_binary;
@@ -1014,9 +1015,9 @@ async fn send_reserved(
         wsl_tp.is_some(),
     )?;
     if wsl_tp.is_none() && matches!(engine.as_str(), "pi" | "omp") {
-        // GUI 进程看不到 shell profile。PI/OMP 配置里的 $VAR 向登录交互 shell 要，
-        // 只注入这次子进程；omp 再拉起的 PI 会继承。WSL 不带本机 env，跳过。
-        pi_family_env::apply(&mut launch.built.command).await;
+        // 只向登录 shell 查询当前引擎配置中的变量：PI 用 $VAR，OMP 用裸名字。
+        // 只注入这次子进程；WSL 不带本机 env，跳过。
+        pi_family_env::apply(&mut launch.built.command, &engine).await;
     }
     // Host-stream engines drive their own transport: no child process — the
     // registry entry only routes interrupts to the transport task. Their
