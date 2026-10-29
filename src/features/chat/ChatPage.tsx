@@ -131,6 +131,8 @@ export default function ChatPage() {
     handleTabClose,
     handleTabCloseAll,
     handleTabCloseInactive,
+    handleTabCloseLeft,
+    handleTabCloseRight,
     handleTabReorder,
     sessionById,
     threadStreaming,
@@ -167,6 +169,7 @@ export default function ChatPage() {
     handleRemoveWorkspace,
     handleWorkspaceAlias,
     handleSetWorkspaceArchived,
+    handleSetWorkspacePinned,
     handleNewSession,
     handleNewSessionInWorkspace,
     handleNewBrowser,
@@ -240,6 +243,7 @@ export default function ChatPage() {
         onRemoveWorkspace={handleRemoveWorkspace}
         onWorkspaceAlias={handleWorkspaceAlias}
         onSetWorkspaceArchived={handleSetWorkspaceArchived}
+        onSetWorkspacePinned={handleSetWorkspacePinned}
         archivedRepos={archivedRepos}
         onNewSessionInWorkspace={handleNewSessionInWorkspace}
         onNewSession={handleNewSession}
@@ -260,6 +264,8 @@ export default function ChatPage() {
           onClose={handleTabClose}
           onCloseAll={handleTabCloseAll}
           onCloseInactive={handleTabCloseInactive}
+          onCloseLeft={handleTabCloseLeft}
+          onCloseRight={handleTabCloseRight}
           closeLabel={t("common.close")}
           onReorder={handleTabReorder}
           onNew={handleNewSession}

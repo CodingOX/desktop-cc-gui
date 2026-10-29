@@ -70,7 +70,13 @@ test result: ok. 1 passed; 0 failed; 0 ignored
 
 烟测载体：PI 1.4.0、OMP 17.2.9、macOS。本地临时 HOME / agent 目录、临时 `.zshrc`、虚构密钥、仅监听 `127.0.0.1` 的假 OpenAI 服务。测试进程清空 CLI 的继承环境，使用生产缓存注入后启动真实 CLI，并断言服务收到 `Bearer ccgui-fake-shell-secret`；假服务返回 401 结束请求，不调用真实模型。临时目录在测试结束或 panic 时清理。可通过 `CCGUI_SMOKE_PI_BIN` / `CCGUI_SMOKE_OMP_BIN` 指定 CLI 可执行文件。
 
-四个生产修改文件的主动 LSP 检查：`Files checked: 4; Total diagnostics: 0`。`git diff --check` 和锚点污染检查通过。编译仅出现基线 `dsh_host.rs` 的 `unused_assignments` 警告。
+四个生产修改文件的主动 LSP 检查：`Files checked: 4; Total diagnostics: 0`。`git diff --check` 和锚点污染检查通过。合入最新目标分支后的编译存在上游代码的 `unused_assignments`、`unused_variables`、`dropping_copy_types` 和 `dead_code` 警告；本次没有改动这些无关代码。
+
+## 与最新目标分支集成
+
+推送前 GitHub 显示原 PR 为 `CONFLICTING`。已合入最新 `v1.1.9`（`602dc7abd87c524af160dbe43e57c0e5990b88b2`）；唯一冲突是发送入口中本次密钥注入与上游 served-model bridge 同时插入同一位置。最终保留两段逻辑，先注入当前引擎的缺失密钥，再设置上游 `CCGUI_SERVED_MODEL_FILE`，不覆盖 served-model 桥接逻辑。相对最新目标分支，`mod.rs` 仅增加两个模块声明与五行注入入口。
+
+合入后重新执行了上文全部五条定向验证命令，结果仍为 `15 + 3 + 3 + 1 + 1` 项通过，0 失败；真实 CLI 烟测显式执行通过。
 
 ## 验证边界
 

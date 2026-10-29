@@ -1707,6 +1707,9 @@ async fn handshake_and_start(
                 comparison_model: None,
                 model: req.model.clone(),
                 effort: req.effort.clone(),
+                // The thread's effective settings follow right below as the
+                // served side.
+                reports_served: true,
             },
         );
     }
@@ -1997,6 +2000,7 @@ pub(crate) async fn run_plan_decision(
         engine_id: "codex".to_string(),
         run_id: run_id.clone(),
         db: Some(Arc::clone(&state.db)),
+        followup: None,
     };
     let mut turn_state = TurnState::new(Some(thread_id.clone()));
     let mut view = TurnView::default();
@@ -2225,6 +2229,7 @@ mod tests {
             engine_id: "codex".to_string(),
             run_id: "test-run".to_string(),
             db: None,
+            followup: None,
         };
         (core, registry, emitter)
     }

@@ -24,7 +24,10 @@ export interface EngineEventPayload {
     | "model"
     | "effort"
     | "launch"
-    | "served";
+    | "served"
+    /** The CLI opened a follow-up turn on its own after `done` (a background
+     *  task finished): reopen the settled run. Carries no data. */
+    | "turn_resumed";
   data: unknown;
   /** Emit-side timestamp (Unix ms), stamped in TurnState::push. Absent from
    *  payloads produced before SDK 0.3.8. */
@@ -67,10 +70,6 @@ export function listenSessionsChanged(cb: () => void): Promise<UnlistenFn> {
   return listen("sessions://changed", () => cb());
 }
 
-/** Fired after a turn lands in the usage ledger; the page re-reads on it. */
-export function listenUsageChanged(cb: () => void): Promise<UnlistenFn> {
-  return listen("usage://changed", () => cb());
-}
 export interface ScanProgress {
   done: number;
   total: number;
